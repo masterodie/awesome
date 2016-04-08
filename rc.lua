@@ -44,8 +44,8 @@ function get_active_wifi()
         if interface[2] == 'UP' then
             return interface[1]
         end
-        return "wifi0"
     end
+    return "wifi1"
 end
 
 function run_once(cmd)
