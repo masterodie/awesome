@@ -1,6 +1,6 @@
 [submodule "redshift"]
 	path = redshift
-	url = https://github.com/YoRyan/awesome-redshift
+	url = https://github.com/blastmaster/awesome-redshift
 [submodule "tyrannical"]
 	path = tyrannical
 	url = https://github.com/Elv13/tyrannical
