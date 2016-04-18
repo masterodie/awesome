@@ -27,7 +27,6 @@
 
  local menue64b29f9c504872c202fabd746ddbf8a = {
      {"E-book Viewer", "ebook-viewer --detach ", "/usr/share/icons/hicolor/16x16/apps/calibre-viewer.png" },
-     {"Feh", "feh ", "///usr/share/feh/images/feh.png" },
      {"GNU Image Manipulation Program", "gimp-2.8 ", "/usr/share/icons/hicolor/16x16/apps/gimp.png" },
      {"Inkscape", "inkscape ", "/usr/share/icons/hicolor/16x16/apps/inkscape.png" },
      {"LRF Viewer", "lrfviewer ", "/usr/share/icons/hicolor/16x16/apps/calibre-viewer.png" },
@@ -43,7 +42,6 @@
      {"FileZilla", "filezilla", "/usr/share/icons/hicolor/16x16/apps/filezilla.png" },
      {"Firefox", "firefox ", "/usr/share/icons/hicolor/16x16/apps/firefox.png" },
      {"JDownloader", "JDownloader", "/usr/share/icons/hicolor/16x16/apps/jdownloader.png" },
-     {"NixNote2", "/usr/bin/nixnote2", "///usr/share/nixnote2/images/windowIcon.png" },
      {"Polly", "polly", "/usr/share/icons/hicolor/16x16/apps/polly.svg" },
      {"Steam", "/usr/bin/steam ", "/usr/share/icons/hicolor/16x16/apps/steam.png" },
      {"Transmission", "transmission-gtk ", "/usr/share/icons/hicolor/16x16/apps/transmission.png" },
@@ -81,7 +79,7 @@
      {"Caffeine-ng", "/usr/bin/caffeine", "/usr/share/icons/hicolor/16x16/apps/caffeine.png" },
      {"DB Browser for SQLite", "sqlitebrowser ", "/usr/share/icons/hicolor/256x256/apps/sqlitebrowser.png" },
      {"Redshift", "redshift-gtk"},
-     {"Xarchiver", "xarchiver", "/usr/share/icons/hicolor/16x16/apps/xarchiver.png" },
+     {"Xarchiver", "xarchiver ", "/usr/share/icons/hicolor/16x16/apps/xarchiver.png" },
      {"gpa", "gpa", "/usr/share/pixmaps/gpa.png" },
      {"ipython", "xterm -e ipython", "/usr/share/pixmaps/ipython.png" },
      {"ipython2", "xterm -e ipython2", "/usr/share/pixmaps/ipython2.png" },
