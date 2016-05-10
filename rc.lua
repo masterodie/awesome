@@ -11,7 +11,7 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 -- local menubar = require("menubar")
 -- Redshift integration
-local redshift = require("redshift")
+--local redshift = require("redshift")
 --Viious widgets
 local vicious = require("vicious")
 local tyrannical = require("tyrannical")
@@ -202,8 +202,8 @@ dmenu_options = ' -fn Terminus:14 '
 modkey = "Mod4"
 
 -- Redshift
-redshift.redshift = "/usr/bin/redshift"
-redshift.init(1)
+--redshift.redshift = "/usr/bin/redshift"
+--redshift.init(1)
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 -- All possible layouts:
@@ -850,7 +850,7 @@ globalkeys = awful.util.table.join(
     -- awful.key({ modkey }, "p", function() menubar.show() end),
 
     -- Toggle redshift
-    awful.key({ modkey }, "d", redshift.toggle),
+    --awful.key({ modkey }, "d", redshift.toggle),
 
     awful.key({ }, "XF86AudioRaiseVolume", function ()
         awful.util.spawn("amixer sset " .. alsa_widget.channel .. " " .. alsa_widget.step .. "+")
