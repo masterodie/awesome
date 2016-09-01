@@ -15,7 +15,7 @@ local naughty = require("naughty")
 --Viious widgets
 local vicious = require("vicious")
 local tyrannical = require("tyrannical")
-require("xdgmenu")
+local net_widgets = require("net_widgets")
 
 
 -- {{{ Functions
@@ -201,6 +201,18 @@ dmenu_options = ' -fn Terminus:14 '
 -- However, you can use another modifier like Mod1, but it may interact with others.
 modkey = "Mod4"
 
+wifi_interface = get_active_wifi()
+eth_interface = "enp2s0"
+
+if  0 == os.execute("test -e /dev/" .. wifi_interface) then
+    local t = "test"
+    net_wireless = net_widgets.wireless({interface=wifi_interface})
+end
+net_wired = net_widgets.indicator({
+    interfaces  = {eth_interface},
+    timeout     = 5
+})
+
 -- Redshift
 --redshift.redshift = "/usr/bin/redshift"
 --redshift.init(1)
@@ -296,10 +308,11 @@ tyrannical.tags = {
                              -- client in the "class" section will start. It will be created on
                              -- the client startup screen
         exclusive   = true,
-        layout      = awful.layout.suit.tile,
+        layout      = awful.layout.suit.fullscreen,
+        screen      = 2,-- Setup on screen 2 if there is more than 1 screen, else on screen 1
         class       = {
             "mpv", "VLC", "mplayer", "libprs500"
-        }
+        },
     } ,
     {
         name        = "misc",
@@ -320,7 +333,7 @@ tyrannical.tags = {
         exclusive   = true,
         layout      = awful.layout.suit.tile,
         class       = {
-            "Steam", "Duskers Configuration", "Duskers"
+            "Steam", "Duskers Configuration", "Duskers",  "retroarch",
         }
     } ,
 }
@@ -330,7 +343,6 @@ tyrannical.properties.intrusive = {
     "ksnapshot"     , "pinentry"       , "gtksu"     , "kcalc"        , "xcalc"               ,
     "feh"           , "Gradient editor", "About KDE" , "Paste Special", "Background color"    ,
     "kcolorchooser" , "plasmoidviewer" , "kruler"       , "plasmaengineexplorer",
-    "mpv",
 }
 
 -- Ignore the tiled layout for the matching clients
@@ -355,7 +367,7 @@ tyrannical.properties.centered = {
 tyrannical.properties.size_hints_honor = { xterm = false, URxvt = false, aterm = false, sauer_client = false, mythfrontend  = false}
 
 tyrannical.properties.no_autofocus = { "mpv", "conky" }
-tyrannical.properties.sticky = { "mpv" }
+
 
 --
 -- }}}
@@ -370,11 +382,10 @@ myawesomemenu = {
 }
 
 mymainmenu = awful.menu({ items = {
-	{ "apps", xdgmenu },
-	{ "awesome", myawesomemenu, beautiful.awesome_icon },
-	{ "open terminal", terminal }
-	}
-	})
+    { "awesome", myawesomemenu, beautiful.awesome_icon },
+    { "open terminal", terminal }
+    }
+    })
 
 mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
                                      menu = mymainmenu })
@@ -447,51 +458,51 @@ my_widgets = {
 -- {{{ alsa
 local alsa_widget =
 {
-	channel = "Master",
-	step = "5%",
-	colors =
-	{
+    channel = "Master",
+    step = "5%",
+    colors =
+    {
         unmute = my_widgets.color.gradient(0, 10),
-		mute = my_widgets.color.bad
-	},
-	mixer = terminal .. " -e alsamixer", -- or whatever your preferred sound mixer is
-	notifications =
-	{
-		icons =
-		{
-			-- the first item is the 'muted' icon
-			"/usr/share/icons/gnome/48x48/status/audio-volume-muted.png",
-			-- the rest of the items correspond to intermediate volume levels - you can have as many as you want (but must be >= 1)
-			"/usr/share/icons/gnome/48x48/status/audio-volume-low.png",
-			"/usr/share/icons/gnome/48x48/status/audio-volume-medium.png",
-			"/usr/share/icons/gnome/48x48/status/audio-volume-high.png"
-		},
-		font = "Inconsolata 11", -- must be a monospace font for the bar to be sized consistently
-		icon_size = 48,
-		bar_size = 8 -- adjust to fit your font if the bar doesn't fit
-	}
+        mute = my_widgets.color.bad
+    },
+    mixer = terminal .. " -e alsamixer", -- or whatever your preferred sound mixer is
+    notifications =
+    {
+        icons =
+        {
+            -- the first item is the 'muted' icon
+            "/usr/share/icons/gnome/48x48/status/audio-volume-muted.png",
+            -- the rest of the items correspond to intermediate volume levels - you can have as many as you want (but must be >= 1)
+            "/usr/share/icons/gnome/48x48/status/audio-volume-low.png",
+            "/usr/share/icons/gnome/48x48/status/audio-volume-medium.png",
+            "/usr/share/icons/gnome/48x48/status/audio-volume-high.png"
+        },
+        font = "Inconsolata 11", -- must be a monospace font for the bar to be sized consistently
+        icon_size = 48,
+        bar_size = 8 -- adjust to fit your font if the bar doesn't fit
+    }
 }
 -- widget
 alsa_widget.bar = my_widgets.progressbar('up')
 alsa_widget.bar:buttons(awful.util.table.join (
-	awful.button ({}, 1, function()
-		awful.util.spawn (alsa_widget.mixer)
-	end),
-	awful.button ({}, 3, function()
+    awful.button ({}, 1, function()
+        awful.util.spawn (alsa_widget.mixer)
+    end),
+    awful.button ({}, 3, function()
                 -- You may need to specify a card number if you're not using your main set of speakers.
                 -- You'll have to apply this to every call to 'amixer sset'.
                 -- awful.util.spawn ("amixer sset -c " .. yourcardnumber .. " " .. alsa_widget.channel .. " toggle")
-		awful.util.spawn ("amixer sset " .. alsa_widget.channel .. " toggle")
-		vicious.force ({ alsa_widget.bar })
-	end),
-	awful.button ({}, 4, function()
-		awful.util.spawn ("amixer sset " .. alsa_widget.channel .. " " .. alsa_widget.step .. "+")
-		vicious.force ({ alsa_widget.bar })
-	end),
-	awful.button ({}, 5, function()
-		awful.util.spawn ("amixer sset " .. alsa_widget.channel .. " " .. alsa_widget.step .. "-")
-		vicious.force ({ alsa_widget.bar })
-	end)
+        awful.util.spawn ("amixer sset " .. alsa_widget.channel .. " toggle")
+        vicious.force ({ alsa_widget.bar })
+    end),
+    awful.button ({}, 4, function()
+        awful.util.spawn ("amixer sset " .. alsa_widget.channel .. " " .. alsa_widget.step .. "+")
+        vicious.force ({ alsa_widget.bar })
+    end),
+    awful.button ({}, 5, function()
+        awful.util.spawn ("amixer sset " .. alsa_widget.channel .. " " .. alsa_widget.step .. "-")
+        vicious.force ({ alsa_widget.bar })
+    end)
 ))
 -- tooltip
 alsa_widget.text = my_widgets.text("Vol:")
@@ -501,72 +512,72 @@ alsa_widget.tooltip = awful.tooltip ({ objects = { alsa_widget.bar, alsa_widget.
 alsa_widget._current_level = 0
 alsa_widget._muted = false
 function alsa_widget:notify ()
-	local preset =
-	{
-		height = 75,
-		width = 300,
-		font = alsa_widget.notifications.font
-	}
-	local i = 1;
-	while alsa_widget.notifications.icons[i + 1] ~= nil
-	do
-		i = i + 1
-	end
-	if i >= 2
-	then
-		preset.icon_size = alsa_widget.notifications.icon_size
-		if alsa_widget._muted or alsa_widget._current_level == 0
-		then
-			preset.icon = alsa_widget.notifications.icons[1]
-		elseif alsa_widget._current_level == 100
-		then
-			preset.icon = alsa_widget.notifications.icons[i]
-		else
-			local int = math.modf (alsa_widget._current_level / 100 * (i - 1))
-			preset.icon = alsa_widget.notifications.icons[int + 2]
-		end
-	end
-	if alsa_widget._muted
-	then
-		preset.title = alsa_widget.channel .. " - Muted"
-	elseif alsa_widget._current_level == 0
-	then
-		preset.title = alsa_widget.channel .. " - 0% (muted)"
-		preset.text = "[" .. string.rep (" ", alsa_widget.notifications.bar_size) .. "]"
-	elseif alsa_widget._current_level == 100
-	then
-		preset.title = alsa_widget.channel .. " - 100% (max)"
-		preset.text = "[" .. string.rep ("|", alsa_widget.notifications.bar_size) .. "]"
-	else
-		local int = math.modf (alsa_widget._current_level / 100 * alsa_widget.notifications.bar_size)
-		preset.title = alsa_widget.channel .. " - " .. alsa_widget._current_level .. "%"
-		preset.text = "[" .. string.rep ("|", int) .. string.rep (" ", alsa_widget.notifications.bar_size - int) .. "]"
-	end
-	if alsa_widget._notify ~= nil
-	then
+    local preset =
+    {
+        height = 75,
+        width = 300,
+        font = alsa_widget.notifications.font
+    }
+    local i = 1;
+    while alsa_widget.notifications.icons[i + 1] ~= nil
+    do
+        i = i + 1
+    end
+    if i >= 2
+    then
+        preset.icon_size = alsa_widget.notifications.icon_size
+        if alsa_widget._muted or alsa_widget._current_level == 0
+        then
+            preset.icon = alsa_widget.notifications.icons[1]
+        elseif alsa_widget._current_level == 100
+        then
+            preset.icon = alsa_widget.notifications.icons[i]
+        else
+            local int = math.modf (alsa_widget._current_level / 100 * (i - 1))
+            preset.icon = alsa_widget.notifications.icons[int + 2]
+        end
+    end
+    if alsa_widget._muted
+    then
+        preset.title = alsa_widget.channel .. " - Muted"
+    elseif alsa_widget._current_level == 0
+    then
+        preset.title = alsa_widget.channel .. " - 0% (muted)"
+        preset.text = "[" .. string.rep (" ", alsa_widget.notifications.bar_size) .. "]"
+    elseif alsa_widget._current_level == 100
+    then
+        preset.title = alsa_widget.channel .. " - 100% (max)"
+        preset.text = "[" .. string.rep ("|", alsa_widget.notifications.bar_size) .. "]"
+    else
+        local int = math.modf (alsa_widget._current_level / 100 * alsa_widget.notifications.bar_size)
+        preset.title = alsa_widget.channel .. " - " .. alsa_widget._current_level .. "%"
+        preset.text = "[" .. string.rep ("|", int) .. string.rep (" ", alsa_widget.notifications.bar_size - int) .. "]"
+    end
+    if alsa_widget._notify ~= nil
+    then
 
-		alsa_widget._notify = naughty.notify (
-		{
-			replaces_id = alsa_widget._notify.id,
-			preset = preset
-		})
-	else
-		alsa_widget._notify = naughty.notify ({ preset = preset })
-	end
+        alsa_widget._notify = naughty.notify (
+        {
+            replaces_id = alsa_widget._notify.id,
+            preset = preset
+        })
+    else
+        alsa_widget._notify = naughty.notify ({ preset = preset })
+    end
 end
 -- register the widget through vicious
 vicious.register (alsa_widget.bar, vicious.widgets.volume, function (widget, args)
-	alsa_widget._current_level = args[1]
-	if args[2] == "♩"
-	then
-		alsa_widget._muted = true
-		alsa_widget.tooltip:set_text (" [Muted] ")
-		widget:set_color (alsa_widget.colors.mute)
-		return 100
-	end
-	alsa_widget._muted = false
-	alsa_widget.tooltip:set_text (" " .. alsa_widget.channel .. ": " .. args[1] .. "% ")
-	widget:set_color (alsa_widget.colors.unmute)
+    alsa_widget._current_level = args[1]
+    if args[2] == "♩"
+    then
+        alsa_widget._muted = true
+        alsa_widget.tooltip:set_text (" [Muted] ")
+        widget:set_color (alsa_widget.colors.mute)
+        return 100
+    end
+    alsa_widget._muted = false
+    alsa_widget.tooltip:set_text (" " .. alsa_widget.channel .. ": " .. args[1] .. "% ")
+    widget:set_color (alsa_widget.colors.unmute)
 
     local paraone = tonumber(args[1])
 
@@ -579,7 +590,7 @@ vicious.register (alsa_widget.bar, vicious.widgets.volume, function (widget, arg
     else
         alsa_widget.icon:set_image(beautiful.icon_spkr_01_low)
     end
-	return args[1]
+    return args[1]
 end, 5, alsa_widget.channel) -- relatively high update time, use of keys/mouse will force update
 alsa_widget.box = my_widgets.box(alsa_widget.bar)
 -- }}}
@@ -730,14 +741,18 @@ for s = 1, screen.count() do
         right_layout:add(wibox.widget.systray())
         right_layout:add(my_widgets.separator())
     end
-    right_layout:add(battery_widget.icon)
-    right_layout:add(battery_widget.box)
-    right_layout:add(my_widgets.separator())
+    if  0 == os.execute("test -e /sys/class/power_supply/BAT0") then
+        right_layout:add(battery_widget.icon)
+        right_layout:add(battery_widget.box)
+        right_layout:add(my_widgets.separator())
+    end
     right_layout:add(alsa_widget.icon)
     right_layout:add(alsa_widget.box)
     right_layout:add(my_widgets.separator())
-    right_layout:add(my_wifi_widget.icon)
-    --right_layout:add(my_wifi_widget.text)
+    right_layout:add(net_wired)
+    if net_wireless then
+        right_layout:add(net_wireless)
+    end
     right_layout:add(my_widgets.separator())
     right_layout:add(my_datewidget.icon)
     right_layout:add(my_datewidget.text)
@@ -821,7 +836,7 @@ globalkeys = awful.util.table.join(
     -- Run or raise applications with dmenu
     awful.key({ modkey }, "r", function ()
         --local f_reader = io.popen( "dmenu_path | dmenu " .. dmenu_options .. " -nb '".. beautiful.bg_normal .."' -nf '".. beautiful.fg_normal .. "' -sb '" .. beautiful.bg_normal .. "' -sf '" .. beautiful.fg_urgent .. "'")
-        local f_reader = io.popen( "dmenu_extended_run " .. dmenu_options .. " -nb '".. beautiful.bg_normal .."' -nf '".. beautiful.fg_normal .. "' -sb '" .. beautiful.bg_normal .. "' -sf '" .. beautiful.fg_urgent .. "'")
+        local f_reader = io.popen( "dmenu_run " .. dmenu_options .. " -nb '".. beautiful.bg_normal .."' -nf '".. beautiful.fg_normal .. "' -sb '" .. beautiful.bg_normal .. "' -sf '" .. beautiful.fg_urgent .. "'")
         --local command = assert(f_reader:read('*a'))
         --f_reader:close()
         --if command == "" then return end
@@ -968,11 +983,6 @@ awful.rules.rules = {
         keys = clientkeys,
         -- honor_size_hints = false,
         buttons = clientbuttons } },
-    { rule = { class = "mpv" },
-    properties = {
-        slave = true,
-        no_autofocus = true,
-        callback = awful.client.setslave } },
     { rule = { class = "MPlayer" },
         properties = { floating = true } },
     { rule = { class = "pinentry" },

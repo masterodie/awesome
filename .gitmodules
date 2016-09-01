@@ -7,3 +7,9 @@
 [submodule "vicious"]
 	path = vicious
 	url = https://github.com/Mic92/vicious
+[submodule "net-widgets"]
+	path = net-widgets
+	url = https://github.com/plotnikovanton/net_widgets.git
+[submodule "net_widgets"]
+	path = net_widgets
+	url = https://github.com/plotnikovanton/net_widgets.git

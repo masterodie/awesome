@@ -4,7 +4,7 @@
 
 theme = {}
 
-theme.font          = "Terminess Powerline 10"
+theme.font          = "Terminus 10"
 
 theme.path = os.getenv('HOME') .. "/.config/awesome/themes/molokai"
 
