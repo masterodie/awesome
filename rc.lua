@@ -15,7 +15,7 @@ local naughty = require("naughty")
 --Viious widgets
 local vicious = require("vicious")
 local tyrannical = require("tyrannical")
-local net_widgets = require("net_widgets")
+--local net_widgets = require("net_widgets")
 
 
 -- {{{ Functions
