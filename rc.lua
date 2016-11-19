@@ -202,7 +202,7 @@ dmenu_options = ' -fn Terminus:14 '
 modkey = "Mod4"
 
 wifi_interface = get_active_wifi()
-eth_interface = "enp2s0"
+eth_interface = "enp5s0"
 
 if  0 == os.execute("test -e /dev/" .. wifi_interface) then
     local t = "test"
@@ -350,7 +350,8 @@ tyrannical.properties.floating = {
     "MPlayer"      , "pinentry"        , "ksnapshot"  , "pinentry"     , "gtksu"          ,
     "xine"         , "feh"             , "kmix"       , "kcalc"        , "xcalc"          ,
     "yakuake"      , "Select Color$"   , "kruler"     , "kcolorchooser", "Paste Special"  ,
-    "New Form"     , "Insert Picture"  , "kcharselect", "mythfrontend" , "plasmoidviewer", "Duskers Configuration"
+    "New Form"     , "Insert Picture"  , "kcharselect", "mythfrontend" , "plasmoidviewer", "Duskers Configuration",
+    "designer",
 }
 
 -- Make the matching clients (by classes) on top of the default layout
